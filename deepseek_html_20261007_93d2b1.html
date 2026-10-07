@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>No Clan Castle Challenge</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg-dark: #0b0f1c;
+      --bg-card: #141b2b;
+      --bg-elevated: #1e2638;
+      --primary: #f5b342;
+      --primary-dark: #d4941e;
+      --secondary: #4f7df3;
+      --text-primary: #f0f3fa;
+      --text-secondary: #a4b0cc;
+      --text-muted: #6b7a99;
+      --border-light: rgba(255, 255, 255, 0.06);
+      --border-medium: rgba(255, 255, 255, 0.12);
+      --success: #3ecf8e;
+      --shadow-card: 0 20px 35px -8px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+      --radius-sm: 10px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --transition-smooth: 0.25s cubic-bezier(0.2, 0.9, 0.4, 1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: radial-gradient(circle at 20% 0%, #1a2338 0%, #0b0f1c 70%);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      color: var(--text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    .container { max-width: 1320px; margin: 0 auto; padding: 0 1rem; }
+
+    h1, h2, h3, h4 {
+      font-family: 'Space Grotesk', 'Inter', sans-serif;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    h1 {
+      font-size: clamp(1.8rem, 6vw, 3.2rem);
+      font-weight: 700;
+      background: linear-gradient(135deg, #ffffff 0%, #e0e9ff 90%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 0.5rem;
+    }
+
+    h2 { font-size: clamp(1.4rem, 4vw, 2rem); color: var(--text-primary); }
+    p { color: var(--text-secondary); font-size: clamp(0.95rem, 2vw, 1rem); }
+
+    .app-wrapper { display: flex; flex-direction: column; gap: 2rem; padding: 1rem 0 3rem; }
+
+    /* HEADER */
+    .hero-section { display: flex; flex-direction: column; gap: 1.2rem; padding: 1rem 0 0.5rem; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(245, 179, 66, 0.12);
+      border: 1px solid rgba(245, 179, 66, 0.3);
+      border-radius: 100px;
+      padding: 0.4rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--primary);
+      width: fit-content;
+      backdrop-filter: blur(4px);
+    }
+
+    /* PLAYER TAG CARD */
+    .player-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem 1.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      box-shadow: var(--shadow-card);
+      backdrop-filter: blur(10px);
+      transition: border-color var(--transition-smooth), box-shadow var(--transition-smooth);
+    }
+
+    .player-card:hover {
+      border-color: rgba(245, 179, 66, 0.25);
+      box-shadow: 0 24px 40px -12px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(245, 179, 66, 0.15);
+    }
+
+    .tag-info {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .tag-label {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      letter-spacing: 0.3px;
+    }
+
+    .tag-label i { color: var(--primary); font-size: 1.1rem; }
+
+    .tag-value {
+      font-family: 'Space Grotesk', monospace;
+      background: var(--bg-elevated);
+      padding: 0.5rem 1.2rem;
+      border-radius: 100px;
+      border: 1px solid var(--border-medium);
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      color: #fff;
+      word-break: break-all;
+    }
+
+    .action-buttons { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
+
+    /* BUTTONS */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      padding: 0.7rem 1.4rem;
+      border-radius: 100px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all var(--transition-smooth);
+      background: var(--bg-elevated);
+      color: var(--text-primary);
+      border: 1px solid var(--border-medium);
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      white-space: nowrap;
+      text-decoration: none;
+      line-height: 1;
+    }
+
+    .btn i { font-size: 1rem; transition: transform 0.2s ease; }
+    .btn:hover { background: #28324a; border-color: rgba(255, 255, 255, 0.2); transform: translateY(-1px); }
+    .btn:active { transform: translateY(1px); }
+
+    .btn-visit {
+      background: rgba(79, 125, 243, 0.15);
+      border: 1px solid rgba(79, 125, 243, 0.5);
+      color: #a5c0ff;
+    }
+    .btn-visit:hover { background: rgba(79, 125, 243, 0.25); border-color: #4f7df3; color: white; }
+
+    .btn-copy {
+      background: rgba(62, 207, 142, 0.1);
+      border: 1px solid rgba(62, 207, 142, 0.3);
+      color: #a0e6c9;
+    }
+    .btn-copy:hover { background: rgba(62, 207, 142, 0.2); border-color: var(--success); color: #c6f5e3; }
+    .btn-copy.copied { background: var(--success); border-color: var(--success); color: #0b0f1c; }
+    .btn-copy.copied i { transform: scale(1.1); }
+
+    /* GALLERY */
+    .gallery-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .gallery-header h2 { font-size: 1.5rem; display: flex; align-items: center; gap: 0.6rem; }
+    .gallery-header h2 i { color: var(--primary); font-size: 1.4rem; }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.25rem;
+      margin-top: 1rem;
+    }
+
+    .image-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid var(--border-light);
+      transition: all var(--transition-smooth);
+      box-shadow: 0 8px 20px -8px rgba(0, 0, 0, 0.6);
+      display: flex;
+      flex-direction: column;
+      animation: fadeInUp 0.4s ease backwards;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .image-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(245, 179, 66, 0.4);
+      box-shadow: 0 24px 30px -12px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(245, 179, 66, 0.2);
+    }
+
+    .image-wrapper {
+      background: #0e1422;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+      padding: 0.75rem;
+      min-height: 200px;
+      max-height: 420px;
+    }
+
+    .image-wrapper img {
+      width: 100%;
+      height: auto;
+      max-height: 400px;
+      object-fit: contain;
+      display: block;
+      transition: transform 0.4s ease;
+      border-radius: 6px;
+    }
+
+    .image-card:hover .image-wrapper img { transform: scale(1.02); }
+
+    .card-footer {
+      padding: 0.85rem 0.9rem;
+      background: var(--bg-card);
+      border-top: 1px solid var(--border-light);
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .day-label {
+      font-family: 'Space Grotesk', monospace;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .timestamp {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      letter-spacing: 0.2px;
+    }
+
+    .timestamp i { font-size: 0.65rem; color: var(--primary); opacity: 0.9; }
+
+    /* EMPTY & LOADING STATES */
+    .empty-state, .loading-state {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 3.5rem 1.5rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      grid-column: 1 / -1;
+      box-shadow: var(--shadow-card);
+    }
+
+    .empty-state i, .loading-state i {
+      font-size: 3rem;
+      color: var(--text-muted);
+      opacity: 0.6;
+    }
+
+    .empty-state i { color: var(--primary); opacity: 0.5; }
+
+    .loading-state i {
+      color: var(--primary);
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .empty-state h3, .loading-state h3 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+
+    .empty-state p, .loading-state p {
+      max-width: 440px;
+      margin: 0 auto;
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+    }
+
+    .empty-state code {
+      color: var(--primary);
+      font-family: 'Space Grotesk', monospace;
+      background: var(--bg-elevated);
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 0.85em;
+      border: 1px solid var(--border-light);
+    }
+
+    /* SKELETON CARD */
+    .skeleton-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid var(--border-light);
+    }
+
+    .skeleton-image {
+      aspect-ratio: 4 / 3;
+      background: linear-gradient(90deg, #1a2338 25%, #232d42 50%, #1a2338 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+    }
+
+    .skeleton-footer {
+      padding: 0.85rem 0.9rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .skeleton-line {
+      height: 12px;
+      background: linear-gradient(90deg, #1a2338 25%, #232d42 50%, #1a2338 75%);
+      background-size: 200% 100%;
+      border-radius: 6px;
+      animation: shimmer 1.5s infinite;
+    }
+
+    .skeleton-line.short { width: 60%; }
+
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--bg-elevated);
+      backdrop-filter: blur(12px);
+      color: white;
+      padding: 0.9rem 1.8rem;
+      border-radius: 100px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      border: 1px solid var(--border-medium);
+      box-shadow: 0 20px 35px -8px black;
+      transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.4, 1), opacity 0.2s;
+      z-index: 999;
+      opacity: 0;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      white-space: nowrap;
+    }
+
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+    .toast i { color: var(--primary); }
+
+    /* FOOTER */
+    .footer {
+      margin-top: 2rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border-light);
+      padding-top: 2rem;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 640px) {
+      body { padding: 0.75rem; }
+      .player-card { padding: 1.2rem; }
+      .tag-info { flex-direction: column; align-items: flex-start; }
+      .action-buttons { width: 100%; }
+      .action-buttons .btn { flex: 1 1 auto; justify-content: center; }
+      .gallery-grid { grid-template-columns: 1fr; gap: 1rem; }
+      .btn { padding: 0.6rem 1rem; font-size: 0.85rem; }
+      .tag-value { font-size: 0.95rem; padding: 0.45rem 1rem; }
+      .image-wrapper {
+        min-height: 160px;
+        max-height: 320px;
+        padding: 0.5rem;
+      }
+      .image-wrapper img { max-height: 300px; }
+      .empty-state, .loading-state { padding: 2.5rem 1.25rem; }
+    }
+
+    @media (min-width: 1024px) {
+      .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+    }
+
+    .btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+  </style>
+</head>
+<body>
+  <div class="container app-wrapper">
+
+    <header class="hero-section">
+      <div class="badge">
+        <i class="fas fa-shield-hal"></i> No Clan Castle Challenge
+      </div>
+      <h1>Every day, no castle.</h1>
+      <p style="font-size: 1.05rem; max-width: 550px;">
+        Daily progress log. Tag <strong style="color: var(--primary);">#RYQYU9J2C</strong> — copy or visit my profile anytime.
+      </p>
+    </header>
+
+    <!-- PLAYER TAG CARD -->
+    <div class="player-card">
+      <div class="tag-info">
+        <span class="tag-label"><i class="fas fa-id-card"></i> Player tag</span>
+        <span class="tag-value" id="playerTagDisplay">#RYQYU9J2C</span>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-copy" id="copyTagBtn" aria-label="Copy player tag">
+          <i class="fas fa-copy"></i> Copy tag
+        </button>
+        <a href="https://link.clashofclans.com/en?action=OpenPlayerProfile&tag=RYQYU9J2C" target="_blank" rel="noopener noreferrer" class="btn btn-visit" aria-label="Visit player profile">
+          <i class="fas fa-external-link-alt"></i> Visit profile
+        </a>
+      </div>
+    </div>
+
+    <!-- GALLERY -->
+    <section>
+      <div class="gallery-header">
+        <h2><i class="fas fa-images"></i> Challenge archive</h2>
+        <span style="font-size: 0.85rem; color: var(--text-muted);" id="imageCount">Loading...</span>
+      </div>
+
+      <div class="gallery-grid" id="galleryGrid">
+        <!-- Images injected here -->
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>No Clan Castle Challenge — built for #RYQYU9J2C.</p>
+      <p style="margin-top: 0.5rem;"><i class="fas fa-shield"></i> Supercell fan content, not affiliated.</p>
+    </footer>
+  </div>
+
+  <div class="toast" id="toastMessage">
+    <i class="fas fa-check-circle"></i> <span id="toastText">Tag copied!</span>
+  </div>
+
+  <script>
+    (function() {
+      const galleryGrid = document.getElementById('galleryGrid');
+      const imageCountSpan = document.getElementById('imageCount');
+      const copyBtn = document.getElementById('copyTagBtn');
+      const toast = document.getElementById('toastMessage');
+      const toastText = document.getElementById('toastText');
+
+      // ---- CONFIG ----
+      const UPLOAD_FOLDER = 'daily-uploads';
+      const DATA_FILE = 'data.json';
+
+      // ---- TOAST ----
+      let toastTimeout;
+      function showToast(message, icon = 'fa-check-circle') {
+        toastText.textContent = message;
+        toast.querySelector('i').className = `fas ${icon}`;
+        toast.classList.add('show');
+        clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => toast.classList.remove('show'), 2800);
+      }
+
+      // ---- COPY TAG ----
+      copyBtn.addEventListener('click', () => {
+        const tag = '#RYQYU9J2C';
+        const fallbackCopy = () => {
+          const ta = document.createElement('textarea');
+          ta.value = tag;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+        };
+
+        const onSuccess = () => {
+          copyBtn.classList.add('copied');
+          copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+          showToast('Player tag copied to clipboard', 'fa-copy');
+          setTimeout(() => {
+            copyBtn.classList.remove('copied');
+            copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy tag';
+          }, 2000);
+        };
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(tag).then(onSuccess).catch(() => { fallbackCopy(); onSuccess(); });
+        } else {
+          fallbackCopy();
+          onSuccess();
+        }
+      });
+
+      // ---- LOADING SKELETONS ----
+      function showLoadingSkeletons(count = 3) {
+        galleryGrid.innerHTML = '';
+        for (let i = 0; i < count; i++) {
+          const sk = document.createElement('div');
+          sk.className = 'skeleton-card';
+          sk.innerHTML = `
+            <div class="skeleton-image"></div>
+            <div class="skeleton-footer">
+              <div class="skeleton-line"></div>
+              <div class="skeleton-line short"></div>
+            </div>
+          `;
+          galleryGrid.appendChild(sk);
+        }
+        imageCountSpan.textContent = 'Loading...';
+      }
+
+      // ---- EMPTY STATE ----
+      function showEmptyState() {
+        galleryGrid.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-folder-open"></i>
+            <h3>Nothing here yet.</h3>
+            <p>Your journey starts with a single upload to <code>daily-uploads/</code>.</p>
+          </div>
+        `;
+        imageCountSpan.textContent = '0 days';
+      }
+
+      // ---- ERROR STATE ----
+      function showErrorState() {
+        galleryGrid.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h3>Couldn't load the archive.</h3>
+            <p>Make sure <code>data.json</code> exists and is properly formatted.</p>
+          </div>
+        `;
+        imageCountSpan.textContent = 'Error';
+      }
+
+      // ---- FETCH data.json ----
+      async function loadData() {
+        showLoadingSkeletons(3);
+
+        try {
+          const res = await fetch(DATA_FILE, { cache: 'no-store' });
+          if (!res.ok) throw new Error('data.json not found');
+          const data = await res.json();
+
+          if (!data.entries || !Array.isArray(data.entries) || data.entries.length === 0) {
+            showEmptyState();
+            return;
+          }
+
+          renderGallery(data.entries);
+        } catch (err) {
+          console.error(err);
+          showErrorState();
+        }
+      }
+
+      // ---- RENDER GALLERY FROM JSON ----
+      function renderGallery(entries) {
+        galleryGrid.innerHTML = '';
+
+        // Sort by day number ascending
+        const sorted = [...entries].sort((a, b) => Number(a.day) - Number(b.day));
+
+        sorted.forEach((entry, index) => {
+          const card = document.createElement('div');
+          card.className = 'image-card';
+          card.style.animationDelay = `${index * 0.05}s`;
+
+          // Image URL from daily-uploads/ + image filename from JSON
+          const imageUrl = `${UPLOAD_FOLDER}/${entry.image}`;
+
+          // Build timestamp string from JSON (date + time)
+          const dateStr = entry.date || '';
+          const timeStr = entry.time || '';
+          const timestampStr = [dateStr, timeStr].filter(Boolean).join(' • ') || 'No date';
+
+          card.innerHTML = `
+            <div class="image-wrapper">
+              <img src="${imageUrl}" alt="Day ${entry.day}" loading="lazy"
+                   onerror="this.parentElement.innerHTML='<i class=\\'fas fa-image\\' style=\\'color:var(--text-muted);font-size:2rem;\\'></i>'">
+            </div>
+            <div class="card-footer">
+              <div class="day-label">
+                <span>Day-${entry.day}</span>
+                <i class="fas fa-calendar-check" style="color: var(--primary); opacity: 0.8;"></i>
+              </div>
+              <div class="timestamp">
+                <i class="far fa-clock"></i> <span>${timestampStr}</span>
+              </div>
+            </div>
+          `;
+
+          galleryGrid.appendChild(card);
+        });
+
+        imageCountSpan.textContent = sorted.length === 1 ? '1 day' : `${sorted.length} days`;
+      }
+
+      // ---- INIT ----
+      window.addEventListener('load', () => {
+        setTimeout(() => loadData(), 300);
+      });
+
+      setTimeout(() => {
+        showToast('Welcome to No Clan Castle Challenge', 'fa-shield-hal');
+      }, 1200);
+    })();
+  </script>
+</body>
+</html>
