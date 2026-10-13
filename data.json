@@ -41,6 +41,12 @@
       "image": "Day-7.png",
       "time": "07:15 PM",
       "date": "October 12, 2026"
+    },
+    {
+      "day": 8,
+      "image": "Day-8.png",
+      "time": "10:02 PM",
+      "date": "October 13, 2026"
     }
   ]
 }
